@@ -1,0 +1,2153 @@
+{
+  "name": "checkpoint4_marina_pereda.json",
+  "nodes": [
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "C0BMX8DJA9M"
+        },
+        "text": "={{ ($json.status || 'OK') === 'OK' && $json.job_proposal_ai ? '*New proposal ready*' : '*WORKER FAILED - no proposal generated*' }}\n*{{ $json.job_title || 'Unknown job' }}*\n{{ $json.job_url }}\n\n{{ ($json.status || 'OK') === 'OK' && $json.job_proposal_ai ? '*Fit:* ' + $json.fit_score + '  |  *Rate:* ' + $json.hourly_rate : '*Error:* ' + ($json.error_message || 'The worker returned no data') + '\\n*Node:* ' + ($json.error_node || 'unknown') + '\\n*Execution:* ' + ($json.execution_id || 'n/a') }}\n\n*What they need:* {{ $json.client_need_summary }}\n\n{{ $json.job_proposal_ai ? '*Proposal:*\\n' + $json.job_proposal_ai : '' }}\n\n{{ ($json.screening_answers || []).length ? '*Screening answers:*\\n' + $json.screening_answers.map(a => '• ' + a.question + '\\n' + a.answer).join('\\n\\n') : '' }}",
+        "otherOptions": {
+          "includeLinkToWorkflow": false,
+          "thread_ts": {
+            "replyValues": {
+              "thread_ts": "={{ $('Send Job Description').item.json.ts }}"
+            }
+          }
+        }
+      },
+      "id": "0d75c312-5087-473c-a959-87de1e2fa014",
+      "name": "Post Proposal to Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.5,
+      "position": [
+        592,
+        400
+      ],
+      "webhookId": "2c39c032-5b85-4ef0-9647-d5ac4789bec8",
+      "credentials": {
+        "slackApi": {
+          "id": "cGTCjsBsRi3KmBZ9",
+          "name": "Slack - Proposal Builder"
+        }
+      },
+      "notes": "Human in the loop: posts the proposal as a thread reply to the original job message."
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.job_type }}",
+                    "rightValue": "shopify",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "5e613e74-bb42-4e44-8b56-448f0d02b13d"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Shopify"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.job_type }}",
+                    "rightValue": "ai automation",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "f193b3d6-4950-43e7-b938-c8f3f9bfc1f6"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "AI Automation"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "Other"
+        }
+      },
+      "id": "1ef8f84b-5507-455e-9831-33089afa4265",
+      "name": "Route by Category",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -208,
+        304
+      ],
+      "alwaysOutputData": true,
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "FNonmuczHXw3K8HJ",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/FNonmuczHXw3K8HJ",
+          "cachedResultName": "worker1_modulo2_marina_pereda"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "job_id": "={{ $json.job_id }}",
+            "job_url": "={{ $json.job_url }}",
+            "job_handle": "={{ $json.job_handle }}",
+            "job_title": "={{ $json.job_title }}",
+            "job_description": "={{ $json.job_description }}",
+            "job_type": "={{ $json.job_type }}",
+            "experience_level": "={{ $json.experience_level }}",
+            "type_of_contract": "={{ $json.type_of_contract }}",
+            "hours_per_week": "={{ $json.hours_per_week }}",
+            "hourly_rate": "={{ $json.hourly_rate }}",
+            "hourly_rate_after_commission": "={{ $json.hourly_rate_after_commission }}",
+            "job_engagement": "={{ $json.job_engagement }}",
+            "main_skills": "={{ $json.main_skills }}",
+            "job_goal": "={{ $json.job_goal }}",
+            "job_requirements": "={{ $json.job_requirements }}",
+            "bonus_qualifications": "={{ $json.bonus_qualifications }}",
+            "job_url_source": "={{ $json.job_url_source }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "job_id",
+              "displayName": "job_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_url",
+              "displayName": "job_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_handle",
+              "displayName": "job_handle",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_title",
+              "displayName": "job_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_description",
+              "displayName": "job_description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_type",
+              "displayName": "job_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "experience_level",
+              "displayName": "experience_level",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "type_of_contract",
+              "displayName": "type_of_contract",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "hours_per_week",
+              "displayName": "hours_per_week",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "hourly_rate",
+              "displayName": "hourly_rate",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "hourly_rate_after_commission",
+              "displayName": "hourly_rate_after_commission",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_engagement",
+              "displayName": "job_engagement",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "main_skills",
+              "displayName": "main_skills",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_goal",
+              "displayName": "job_goal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_requirements",
+              "displayName": "job_requirements",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "bonus_qualifications",
+              "displayName": "bonus_qualifications",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_url_source",
+              "displayName": "job_url_source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -16,
+        224
+      ],
+      "id": "ecafa375-b5e0-465a-96a0-45af1a1a9774",
+      "name": "Shopify Skill Worker",
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 3000,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "G25CFjOGhU9uOB3X",
+          "cachedResultName": "Proposal Builder Audit Log"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "timestamp": "={{ $now.toISO() }}",
+            "execution_id": "={{ $execution.id }}",
+            "node_name": "Route by Category",
+            "event_type": "skipped",
+            "job_category": "={{ $json.output.job_category }}",
+            "job_type": "",
+            "fit_score": "",
+            "summary": "Skipped: not a Shopify or AI automation job."
+          },
+          "schema": [
+            {
+              "id": "timestamp",
+              "displayName": "timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "execution_id",
+              "displayName": "execution_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "node_name",
+              "displayName": "node_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "event_type",
+              "displayName": "event_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_category",
+              "displayName": "job_category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_type",
+              "displayName": "job_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "fit_score",
+              "displayName": "fit_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "summary",
+              "displayName": "summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "883e4b54-2a3e-4196-acb9-a0f7c2f1cd1a",
+      "name": "Log Skipped",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        -144,
+        752
+      ],
+      "notes": "Observability: logs jobs the router discarded as OTHER."
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "JxVykFApDyiqmUMu",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/JxVykFApDyiqmUMu",
+          "cachedResultName": "worker2_modulo2_marina_pereda"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {}
+        },
+        "options": {
+          "waitForSubWorkflow": true
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.3,
+      "position": [
+        -16,
+        416
+      ],
+      "id": "2f337dae-a1db-4811-9c8d-7704dd563d55",
+      "name": "AI Automation Skill Worker",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 3000,
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ea796630-09e0-4908-82e4-2abb93f5df11",
+              "name": "job_id",
+              "value": "={{ $('Generate Job ID').item.json.job_id }}",
+              "type": "string"
+            },
+            {
+              "id": "e104bddd-f5d5-4c48-80a3-bcc1355a1785",
+              "name": "job_url",
+              "value": "={{ $('Generate Job ID').item.json.job_url }}",
+              "type": "string"
+            },
+            {
+              "id": "020d89cd-f2d0-4126-b6a4-4250780b7054",
+              "name": "job_handle",
+              "value": "={{ $('Extract Job Data - Basic LLM Chain').item.json.output['Job ID Handle'] }}",
+              "type": "string"
+            },
+            {
+              "id": "9a3c3986-c9d4-426e-a328-21af2efb04b8",
+              "name": "job_title",
+              "value": "={{ $('Extract Job Data - Basic LLM Chain').item.json.output['Job Title'] }}",
+              "type": "string"
+            },
+            {
+              "id": "c057038e-36ec-4cde-b4a4-4f209cd11cc9",
+              "name": "job_description",
+              "value": "={{ $('Extract Job Data - Basic LLM Chain').item.json.output['Job Description'] }}",
+              "type": "string"
+            },
+            {
+              "id": "5fb57feb-59a8-41cd-b481-03967c81ba68",
+              "name": "job_type",
+              "value": "={{ $('Extract Job Data - Basic LLM Chain').item.json.output['Job Type'] }}",
+              "type": "string"
+            },
+            {
+              "id": "e2ccf3d6-dba0-4392-8bd6-b43326b5f809",
+              "name": "experience_level",
+              "value": "={{ $('Extract Job Data - Basic LLM Chain').item.json.output['Experience Level'] }}",
+              "type": "string"
+            },
+            {
+              "id": "871c1043-8558-4753-afb1-ecda3bab64db",
+              "name": "type_of_contract",
+              "value": "={{ $('Extract Job Data - Basic LLM Chain').item.json.output['Type of Contract'] }}",
+              "type": "string"
+            },
+            {
+              "id": "df014dae-f6eb-4a79-a25e-88bd37fc86b6",
+              "name": "hours_per_week",
+              "value": "={{ $('Extract Job Data - Basic LLM Chain').item.json.output['Hours Per Week'] }}",
+              "type": "string"
+            },
+            {
+              "id": "08bb76cd-c9b2-4ded-92a6-a7c2e5b683bb",
+              "name": "hourly_rate",
+              "value": "={{ $('Extract Job Data - Basic LLM Chain').item.json.output['Hourly Rate'] }}",
+              "type": "string"
+            },
+            {
+              "id": "41799f15-da1a-4ce6-841e-c96d27cbf4d7",
+              "name": "hourly_rate_after_commission",
+              "value": "={{ $('Extract Job Data - Basic LLM Chain').item.json.output['Hourly Rate After Comission'] }}",
+              "type": "string"
+            },
+            {
+              "id": "415e7ebc-cd2e-41e8-a8ed-a1a22dd78bfe",
+              "name": "job_engagement",
+              "value": "={{ $('Extract Job Data - Basic LLM Chain').item.json.output['Job Engagement'] }}",
+              "type": "string"
+            },
+            {
+              "id": "47a44c31-b3e5-4fec-9c6c-9d6e45fe38f4",
+              "name": "main_skills",
+              "value": "={{ $('Extract Job Data - Basic LLM Chain').item.json.output['Main Skills'] }}",
+              "type": "string"
+            },
+            {
+              "id": "52c04824-62f3-4f6a-99b2-95b895ea7f21",
+              "name": "job_goal",
+              "value": "={{ $('Extract Job Data - Basic LLM Chain').item.json.output['Job Goal'] }}",
+              "type": "string"
+            },
+            {
+              "id": "21811a2c-b4bc-437e-ac03-4164f9f092b2",
+              "name": "job_requirements",
+              "value": "={{ $('Extract Job Data - Basic LLM Chain').item.json.output['Job Requirements'] }}",
+              "type": "string"
+            },
+            {
+              "id": "eee4f07a-2ccc-49c8-a6f7-73c4d7e2b792",
+              "name": "bonus_qualifications",
+              "value": "={{ $('Extract Job Data - Basic LLM Chain').item.json.output['Bonus Qualifications'] }}",
+              "type": "string"
+            },
+            {
+              "id": "d27ff660-2df9-494b-9696-6056aff5fedf",
+              "name": "job_url_source",
+              "value": "={{ $('Generate Job ID').item.json.url_source }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -496,
+        48
+      ],
+      "id": "d7a6454e-470a-42e3-a102-e933706fed7b",
+      "name": "Existent Job ID",
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "maxTries": 5
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1YA_kAmgL4CouvOLZhWFO4qM6Z96d0rB7vrZx21fYYOM",
+          "mode": "list",
+          "cachedResultName": "Jobs Log - Upwork",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1YA_kAmgL4CouvOLZhWFO4qM6Z96d0rB7vrZx21fYYOM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Job Classification",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1YA_kAmgL4CouvOLZhWFO4qM6Z96d0rB7vrZx21fYYOM/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "job_id",
+              "lookupValue": "={{ $json.job_id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -912,
+        368
+      ],
+      "id": "5e31722b-eb0a-4064-a42e-459b9d1763b0",
+      "name": "Search Job ID",
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "maxTries": 5,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3xegCjL7n4CjzV4e",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Code node — mode: Run Once for All Items\n\n// query params that are noise, never identity\nconst TRACKING = [\n  /^utm_/i, /^ga_/i, /^mc_/i, /^pk_/i, /^hsa_/i, /^_hs/i, /^__/,\n  /^(ref|referrer|referer|source|src|medium|campaign)$/i,\n  /^(fbclid|gclid|gbraid|wbraid|msclkid|ttclid|twclid|igshid|yclid|epik|li_fat_id)$/i,\n  /^(trk|trkinfo|refid|trackingid|lipi|licu|originaltrk)$/i,\n  /^(share|shared|si|feature|spm|scm|from|via|sessionid)$/i,\n];\n\nfunction hash16(str) {\n  let h1 = 0x811c9dc5, h2 = 0x01000193;\n  for (let i = 0; i < str.length; i++) {\n    const c = str.charCodeAt(i);\n    h1 = Math.imul(h1 ^ c, 0x01000193);\n    h2 = Math.imul(h2 ^ c, 0x85ebca6b);\n  }\n  return (h1 >>> 0).toString(16).padStart(8, '0')\n       + (h2 >>> 0).toString(16).padStart(8, '0');\n}\n\nfunction clean(input) {\n  let s = String(input || '').trim();\n  s = s.replace(/^<|>$/g, '').split('|')[0].trim();  // Slack <url|label>\n  return s.split('#')[0];                             // drop fragment\n}\n\nfunction canonicalize(url) {\n  const m = url.match(/^(?:https?:\\/\\/)?([^\\/?#:]+)(?::\\d+)?([^?]*)(?:\\?(.*))?$/i);\n  if (!m) return { host: '', canonical: url.toLowerCase() };\n\n  const host = m[1].replace(/^(www\\d?|m|mobile)\\./i, '').toLowerCase();\n  const path = (m[2] || '').replace(/\\/{2,}/g, '/').replace(/\\/+$/, '');\n\n  const query = (m[3] || '')\n    .split('&')\n    .filter(Boolean)\n    .map(p => {\n      const i = p.indexOf('=');\n      return i === -1 ? [p, ''] : [p.slice(0, i), p.slice(i + 1)];\n    })\n    .filter(([k]) => k && !TRACKING.some(re => re.test(k)))\n    .sort((a, b) => a[0].localeCompare(b[0]))   // param order must not matter\n    .map(([k, v]) => `${k}=${v}`)\n    .join('&');\n\n  return { host, canonical: host + path + (query ? '?' + query : '') };\n}\n\nreturn $input.all().map(item => {\n  const data = item.json.output ?? item.json;\n  const raw = clean(data['Job URL'] ?? data.job_url ?? '');\n  const { host, canonical } = canonicalize(raw);\n\n  return {\n    json: {\n      job_url: raw,\n      url_source: host || 'unknown',\n      job_id: hash16(canonical),\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1024,
+        160
+      ],
+      "id": "f313fb63-bccc-48d0-a8dc-077029443e64",
+      "name": "Generate Job ID",
+      "alwaysOutputData": true,
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "job-already-in-sheet",
+              "leftValue": "={{ !!$json.job_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -768,
+        368
+      ],
+      "id": "a1bd7729-bc54-4da9-8f9c-bce1a73c9ea6",
+      "name": "IF Current Job ID",
+      "notes": "TRUE = Session_ID vacío → usuario nuevo. FALSE = ya existe."
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ea796630-09e0-4908-82e4-2abb93f5df11",
+              "name": "job_id",
+              "value": "={{ $('Generate Job ID').item.json.job_id }}",
+              "type": "string"
+            },
+            {
+              "id": "e104bddd-f5d5-4c48-80a3-bcc1355a1785",
+              "name": "job_url",
+              "value": "={{ $('Generate Job ID').item.json.job_url }}",
+              "type": "string"
+            },
+            {
+              "id": "020d89cd-f2d0-4126-b6a4-4250780b7054",
+              "name": "job_handle",
+              "value": "={{ $('Extract Job Data - Basic LLM Chain').item.json.output['Job ID Handle'] }}",
+              "type": "string"
+            },
+            {
+              "id": "9a3c3986-c9d4-426e-a328-21af2efb04b8",
+              "name": "job_title",
+              "value": "={{ $('Extract Job Data - Basic LLM Chain').item.json.output['Job Title'] }}",
+              "type": "string"
+            },
+            {
+              "id": "c057038e-36ec-4cde-b4a4-4f209cd11cc9",
+              "name": "job_description",
+              "value": "={{ $('Extract Job Data - Basic LLM Chain').item.json.output['Job Description'] }}",
+              "type": "string"
+            },
+            {
+              "id": "5fb57feb-59a8-41cd-b481-03967c81ba68",
+              "name": "job_type",
+              "value": "={{ $('Extract Job Data - Basic LLM Chain').item.json.output['Job Type'] }}",
+              "type": "string"
+            },
+            {
+              "id": "e2ccf3d6-dba0-4392-8bd6-b43326b5f809",
+              "name": "experience_level",
+              "value": "={{ $('Extract Job Data - Basic LLM Chain').item.json.output['Experience Level'] }}",
+              "type": "string"
+            },
+            {
+              "id": "871c1043-8558-4753-afb1-ecda3bab64db",
+              "name": "type_of_contract",
+              "value": "={{ $('Extract Job Data - Basic LLM Chain').item.json.output['Type of Contract'] }}",
+              "type": "string"
+            },
+            {
+              "id": "df014dae-f6eb-4a79-a25e-88bd37fc86b6",
+              "name": "hours_per_week",
+              "value": "={{ $('Extract Job Data - Basic LLM Chain').item.json.output['Hours Per Week'] }}",
+              "type": "string"
+            },
+            {
+              "id": "08bb76cd-c9b2-4ded-92a6-a7c2e5b683bb",
+              "name": "hourly_rate",
+              "value": "={{ $('Extract Job Data - Basic LLM Chain').item.json.output['Hourly Rate'] }}",
+              "type": "string"
+            },
+            {
+              "id": "41799f15-da1a-4ce6-841e-c96d27cbf4d7",
+              "name": "hourly_rate_after_commission",
+              "value": "={{ $('Extract Job Data - Basic LLM Chain').item.json.output['Hourly Rate After Comission'] }}",
+              "type": "string"
+            },
+            {
+              "id": "415e7ebc-cd2e-41e8-a8ed-a1a22dd78bfe",
+              "name": "job_engagement",
+              "value": "={{ $('Extract Job Data - Basic LLM Chain').item.json.output['Job Engagement'] }}",
+              "type": "string"
+            },
+            {
+              "id": "47a44c31-b3e5-4fec-9c6c-9d6e45fe38f4",
+              "name": "main_skills",
+              "value": "={{ $('Extract Job Data - Basic LLM Chain').item.json.output['Main Skills'] }}",
+              "type": "string"
+            },
+            {
+              "id": "52c04824-62f3-4f6a-99b2-95b895ea7f21",
+              "name": "job_goal",
+              "value": "={{ $('Extract Job Data - Basic LLM Chain').item.json.output['Job Goal'] }}",
+              "type": "string"
+            },
+            {
+              "id": "21811a2c-b4bc-437e-ac03-4164f9f092b2",
+              "name": "job_requirements",
+              "value": "={{ $('Extract Job Data - Basic LLM Chain').item.json.output['Job Requirements'] }}",
+              "type": "string"
+            },
+            {
+              "id": "eee4f07a-2ccc-49c8-a6f7-73c4d7e2b792",
+              "name": "bonus_qualifications",
+              "value": "={{ $('Extract Job Data - Basic LLM Chain').item.json.output['Bonus Qualifications'] }}",
+              "type": "string"
+            },
+            {
+              "id": "d27ff660-2df9-494b-9696-6056aff5fedf",
+              "name": "job_url_source",
+              "value": "={{ $('Generate Job ID').item.json.url_source }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -592,
+        384
+      ],
+      "id": "7ab0181a-006b-4fe1-9534-2a73d51b672f",
+      "name": "Register New Job ID",
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "maxTries": 5
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1YA_kAmgL4CouvOLZhWFO4qM6Z96d0rB7vrZx21fYYOM",
+          "mode": "list",
+          "cachedResultName": "Jobs Log - Upwork",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1YA_kAmgL4CouvOLZhWFO4qM6Z96d0rB7vrZx21fYYOM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Job Classification",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1YA_kAmgL4CouvOLZhWFO4qM6Z96d0rB7vrZx21fYYOM/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "job_id": "={{ $json.job_id }}",
+            "job_url": "={{ $json.job_url }}",
+            "job_handle": "={{ $json.job_handle }}",
+            "job_title": "={{ $json.job_title }}",
+            "job_description": "={{ $json.job_description }}",
+            "job_type": "={{ $json.job_type }}",
+            "experience_level": "={{ $json.experience_level }}",
+            "type_of_contract": "={{ $json.type_of_contract }}",
+            "hours_per_week": "={{ $json.hours_per_week }}",
+            "hourly_rate": "={{ $json.hourly_rate }}",
+            "hourly_rate_after_commission": "={{ $json.hourly_rate_after_commission }}",
+            "job_engagement": "={{ $json.job_engagement }}",
+            "main_skills": "={{ $json.main_skills }}",
+            "job_goal": "={{ $json.job_goal }}",
+            "job_requirements": "={{ $json.job_requirements }}",
+            "bonus_qualifications": "={{ $json.bonus_qualifications }}",
+            "job_url_source": "={{ $json.job_url_source }}",
+            "num_runs": "={{ 1 }}",
+            "last_execution": "={{ $now.setZone('America/Mexico_City').toFormat('yyyy-LL-dd HH:mm:ss') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "job_id",
+              "displayName": "job_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_url",
+              "displayName": "job_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_handle",
+              "displayName": "job_handle",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_title",
+              "displayName": "job_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_description",
+              "displayName": "job_description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_type",
+              "displayName": "job_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "experience_level",
+              "displayName": "experience_level",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "type_of_contract",
+              "displayName": "type_of_contract",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "hours_per_week",
+              "displayName": "hours_per_week",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "hourly_rate",
+              "displayName": "hourly_rate",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "hourly_rate_after_commission",
+              "displayName": "hourly_rate_after_commission",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_engagement",
+              "displayName": "job_engagement",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "main_skills",
+              "displayName": "main_skills",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_goal",
+              "displayName": "job_goal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_requirements",
+              "displayName": "job_requirements",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "bonus_qualifications",
+              "displayName": "bonus_qualifications",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_url_source",
+              "displayName": "job_url_source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -384,
+        416
+      ],
+      "id": "6af68774-5067-441f-a97e-cb4c5f9dc1fd",
+      "name": "Register New Job ID1",
+      "alwaysOutputData": true,
+      "retryOnFail": true,
+      "maxTries": 5,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3xegCjL7n4CjzV4e",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=### Upwork Job Audit ###\n\nPlease take the text from  {{ $json.text }} and extract the following variables:\n\nJob ID\nJob URL: take the URL\nJob ID Handle: create a unique handle from the Job Title\nJob Title\nJob Description\nExperience Level: can be beginner, intermediate, advanced or expert\nJob Type: Is this mainly a Shopify (Shopify Theme Development, Shopify UX, Shopify Design, Ecommerce Management) or AI Automation (Claude Code, AI Agent, n8n, Claude Skills) job?\nType of Contract: Per project, or per hour\nHours Per Week: How many hours per week (if added)\nHourly rate: range or fixed\nHourly rate After Comission\nJob Engagement: Freelance or Full-time\nMain Skills: Which main skills they require\nJob Goal: Is there a specific goal to achieve with this project or job offer\nJob Requirements: Is this job requiring  specific skills, or does it asks to respond any particular questions to apply\nBonus Qualifications: Are there any extra qualifications they will consider to a better fit for this job",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": []
+        },
+        "batching": {
+          "batchSize": 5
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        -1296,
+        160
+      ],
+      "id": "ea7d4921-7e4e-4034-9bca-f8c51c4632c8",
+      "name": "Extract Job Data - Basic LLM Chain",
+      "alwaysOutputData": true,
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"Job URL\": {\n      \"type\": \"string\",\n      \"description\": \"Job URL\"\n    },\n    \"Job ID Handle\": {\n      \"type\": \"string\",\n      \"description\": \"Job Handle\"\n    },\n    \"Job Title\": {\n      \"type\": \"string\",\n      \"description\": \"Job Title extracted from the text\"\n    },\n    \"Job Description\": {\n      \"type\": \"string\",\n      \"description\": \"Job Description text\"\n    },\n    \"Job Type\": {\n      \"type\": \"string\",\n      \"description\": \"Shopify or AI Automation\",\n      \"enum\": [\"shopify\", \"ai automation\"]\n    },\n    \"Experience Level\": {\n      \"type\": \"string\",\n      \"description\": \"beginner, intermediate, advanced or expert\",\n      \"enum\": [\"beginner\", \"intermediate\", \"advanced\", \"expert\"]\n    },\n    \"Type of Contract\": {\n      \"type\": \"string\",\n      \"description\": \"Per project, or per hour\",\n      \"enum\": [\"per project\", \"per hour\"]\n    },\n    \"Hours Per Week\": {\n      \"type\": \"string\",\n      \"description\": \"How many hours per week (if added)\"\n    },\n    \"Hourly Rate\": {\n      \"type\": \"string\",\n      \"description\": \"either fixed or range\"\n    },\n    \"Hourly Rate After Comission\": {\n      \"type\": \"string\",\n      \"description\": \"hourly rate after comission, normally 8%\"\n    },\n    \"Job Engagement\": {\n      \"type\": \"string\",\n      \"description\": \"Freelance or Full-time\",\n      \"enum\": [\"freelance\", \"full-time\"]\n    },\n    \"Main Skills\": {\n      \"type\": \"string\",\n      \"description\": \"Which main skills they require\"\n    },\n    \"Job Goal\": {\n      \"type\": \"string\",\n      \"description\": \"Is there a specific goal to achieve with this project or job offer\"\n    },\n    \"Job Requirements\": {\n      \"type\": \"string\",\n      \"description\": \"Is this job requiring  specific skills, or does it asks to respond any particular questions to apply\"\n    },\n    \"Bonus Qualifications\": {\n      \"type\": \"string\",\n      \"description\": \"Are there any extra qualifications they will consider to a better fit for this job\"\n    }\n  },\n  \"required\": [\"Job Title\", \"Job Type\"]\n}\n",
+        "autoFix": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        -1232,
+        384
+      ],
+      "id": "7c4b479d-0b8b-4af7-b003-7e7c4dd744bd",
+      "name": "JSON Parser",
+      "alwaysOutputData": true,
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "content": "## 1) Trigger\nEl workflow se dispara cuando el canal de **Slack #proposal-builder** recibe el texto de un trabajo publicado en Upwork",
+        "height": 192,
+        "width": 288,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1600,
+        -176
+      ],
+      "id": "6708fe4b-0bea-4483-9fa7-99e2a60f52b6",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "trigger": [
+          "message"
+        ],
+        "channelId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "C0BMX8DJA9M"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.slackTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1552,
+        0
+      ],
+      "id": "1309e309-effd-4c2e-98fa-be9c36dea566",
+      "name": "Send Job Description",
+      "webhookId": "0df512dc-9aa4-4870-a37c-8ac7208cf920",
+      "credentials": {
+        "slackApi": {
+          "id": "cGTCjsBsRi3KmBZ9",
+          "name": "Slack - Proposal Builder"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## 2) Filtra Mensajes\n\n**Anti bucle infinito**\n\nPero este workflow solo correrá si el mensaje contiene el texto: **PROCESS JOB**",
+        "height": 192,
+        "width": 368,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1280,
+        -176
+      ],
+      "id": "daad4ffb-1d56-4562-a0ce-fbc947be08e1",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "not-a-bot-or-system-message",
+              "leftValue": "={{ !$json.bot_id && !$json.subtype && ($json.text || '').toUpperCase().includes('PROCESS JOB') }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "3ce1e69e-7355-4cd3-94ff-0292e34fdb73",
+      "name": "Slack Filter Messages",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -1248,
+        0
+      ],
+      "notes": "Blocks the bot's own proposal replies and Slack system notices (joins, integration added) from re-triggering the workflow. Normal human messages pass."
+    },
+    {
+      "parameters": {
+        "content": "## 3-a) Parseador JSON\nToma la data extraída, y parsea la información para crear un **objeto JSON.**",
+        "height": 176,
+        "width": 304,
+        "color": "#EDEDED"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1392,
+        576
+      ],
+      "id": "44052383-4990-4688-9343-554520a0da47",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## 4) Asigna un ID único\n\nGenera un ID único del Job (trabajo) para luego utilizarlo en la base de datos (Google Sheet) | Output: **job_id**",
+        "height": 192,
+        "width": 352,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1056,
+        0
+      ],
+      "id": "ea390b88-b8a0-4003-832f-a37d18081efd",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## 3) Extractor de Data\nEste nodo extrae la información básica del trabajo, y genera las variables: **Job ID**, **Job URL**, **Job ID Handle**, **Job Title**, **Job Description**, **Experience Level**, **Job Type**, **Type of Contract**, **Hours Per Week**, **Hourly rate**, **Hourly rate After Commission**, **Job Engagement**, **Main Skills**, **Job Goal**, **Job Requirements**, y **Bonus Qualifications**",
+        "height": 304,
+        "width": 320,
+        "color": "#D1D1D1"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1600,
+        176
+      ],
+      "id": "bc0bcd7a-2f74-463b-8ed5-2c6c1edb30a2",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## 5) Consulta a Base de Datos\n\nLa base de datos se hospeda en un Google Sheet. Este nodo busca si el **job_id** ya existe.",
+        "height": 224,
+        "width": 208,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1008,
+        464
+      ],
+      "id": "79bde26e-9a04-4c3b-b2ec-2120d1673da3",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "## 8) Memoria Persistente\n\nSi el Job ID existe, actualiza el núm de veces que se ha agregado este Job ID usando **num_runs** y agrega timestamp de cuándo fue la última vez que se proceso **last_execution**.",
+        "height": 240,
+        "width": 272,
+        "color": "#D1DDFF"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -416,
+        -176
+      ],
+      "id": "444f4a2c-2533-4d8c-af51-64056143da98",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "## 7-b) Nodo Edit Fields - Registra y mapea los datos del \"Parseador JSON\"\n\nSi el Job ID NO existe, pasa los datos a la base de datos (Google Sheet), y pasa los datos al Switch.",
+        "height": 288,
+        "width": 208,
+        "color": "#D1DDFF"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -640,
+        496
+      ],
+      "id": "00dd6843-9ce4-4f1f-99dd-1a988a0db47c",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "## 9) Elige el sub-workflow\n\nRutea el tipo de trabajo usando la vaariable **job_type**",
+        "height": 208,
+        "width": 208,
+        "color": "#D6E8FF"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -288,
+        112
+      ],
+      "id": "6c321bca-19af-45be-a423-5fb4966f5a06",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "## 8) Google Sheet - Registro de Nuevo Job ID\n\nRegistra el ID del nuevo Job\n",
+        "width": 272,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -416,
+        560
+      ],
+      "id": "cde03d7a-0157-4f92-b43a-405150108985",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "## 6) Si el **job_id** existe, entonces",
+        "height": 128,
+        "width": 176,
+        "color": "#E5FFFC"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -800,
+        256
+      ],
+      "id": "5e695faa-a591-41e9-a524-f5b00abe64ae",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1YA_kAmgL4CouvOLZhWFO4qM6Z96d0rB7vrZx21fYYOM",
+          "mode": "list",
+          "cachedResultName": "Jobs Log - Upwork",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1YA_kAmgL4CouvOLZhWFO4qM6Z96d0rB7vrZx21fYYOM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Job Classification",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1YA_kAmgL4CouvOLZhWFO4qM6Z96d0rB7vrZx21fYYOM/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "job_id": "={{ $json.job_id }}",
+            "num_runs": "={{ (Number($json.num_runs) || 0) + 1 }}",
+            "last_execution": "={{ $now.setZone('America/Mexico_City').toFormat('yyyy-LL-dd HH:mm:ss') }}"
+          },
+          "matchingColumns": [
+            "job_id"
+          ],
+          "schema": [
+            {
+              "id": "job_id",
+              "displayName": "job_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "job_url",
+              "displayName": "job_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_handle",
+              "displayName": "job_handle",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_title",
+              "displayName": "job_title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_description",
+              "displayName": "job_description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_type",
+              "displayName": "job_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "experience_level",
+              "displayName": "experience_level",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "type_of_contract",
+              "displayName": "type_of_contract",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "hours_per_week",
+              "displayName": "hours_per_week",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "hourly_rate",
+              "displayName": "hourly_rate",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "hourly_rate_after_commission",
+              "displayName": "hourly_rate_after_commission",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_engagement",
+              "displayName": "job_engagement",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "main_skills",
+              "displayName": "main_skills",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_goal",
+              "displayName": "job_goal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_requirements",
+              "displayName": "job_requirements",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "bonus_qualifications",
+              "displayName": "bonus_qualifications",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_url_source",
+              "displayName": "job_url_source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "job_proposal_ai",
+              "displayName": "job_proposal_ai",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "client_need_summary",
+              "displayName": "client_need_summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "fit_score",
+              "displayName": "fit_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "screening_answers",
+              "displayName": "screening_answers",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "num_runs",
+              "displayName": "num_runs",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "last_execution",
+              "displayName": "last_execution",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -656,
+        48
+      ],
+      "id": "88acf840-340c-48be-beb1-f54b58e7852b",
+      "name": "Update Job ID",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3xegCjL7n4CjzV4e",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "## 10-a) Ejecuta Sub-workflow\n\nSi el Switch ha definido que se necesitan Skills para Shopify Development, entonces ejecuta este nodo",
+        "height": 208,
+        "width": 288,
+        "color": "#FFF1E5"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -32,
+        32
+      ],
+      "id": "66d36d8b-659c-472e-b38f-9be46abf2dca",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "## 10-b) Ejecuta Sub-workflow\n\nSi el Switch ha definido que se necesitan Skills para AI Automations, entonces ejecuta este nodo",
+        "height": 208,
+        "width": 288,
+        "color": "#FFF1E5"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -32,
+        560
+      ],
+      "id": "dfcc8eb3-9850-4982-b06c-da3d111da715",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "content": "## 12-a) Output: Slack\nEnvía una respuesta al mensaje original de Slack con la propuesta construida completa.",
+        "height": 176,
+        "width": 336,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        576,
+        512
+      ],
+      "id": "fb3654ed-13b7-472e-97e7-abd4cd629469",
+      "name": "Sticky Note13"
+    },
+    {
+      "parameters": {
+        "content": "## 10-c) Registra los empleos que no hacen match con Shopify o AI Automations",
+        "height": 144,
+        "width": 224,
+        "color": "#FFF1E5"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -384,
+        752
+      ],
+      "id": "f1da14a7-0bf8-4333-a6c2-dd416e6126d4",
+      "name": "Sticky Note14"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "claude-sonnet-4-6",
+          "cachedResultName": "Claude Sonnet 4.6"
+        },
+        "options": {
+          "maxTokensToSample": 4096
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.5,
+      "position": [
+        -1296,
+        288
+      ],
+      "id": "052a0ac2-1c82-4508-b567-59760753c54a",
+      "name": "Claude",
+      "credentials": {
+        "anthropicApi": {
+          "id": "jhWhqSyqb1WxMTpa",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "claude-sonnet-4-6",
+          "cachedResultName": "Claude Sonnet 4.6"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.5,
+      "position": [
+        -1232,
+        512
+      ],
+      "id": "f12e31a9-525e-4504-b5b8-f8ca27c74719",
+      "name": "Claude2",
+      "credentials": {
+        "anthropicApi": {
+          "id": "jhWhqSyqb1WxMTpa",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## 7-a) Si el Job ID existe, usa memoria\n\nSi el Job ID ya existe, actualiza el Google Sheet, agrega el número total de ejecuciones, y el timestamp de la última ejecución\n",
+        "height": 240,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -688,
+        -176
+      ],
+      "id": "1c62ca8c-b124-43c8-82bc-550f5344beb8",
+      "name": "Sticky Note15"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "m1",
+              "name": "job_id",
+              "type": "string",
+              "value": "={{ $json.job_id }}"
+            },
+            {
+              "id": "m2",
+              "name": "job_title",
+              "type": "string",
+              "value": "={{ $json.job_title || 'Sin titulo' }}"
+            },
+            {
+              "id": "m3",
+              "name": "fit_score",
+              "type": "string",
+              "value": "={{ $json.fit_score || 'UNKNOWN' }}"
+            },
+            {
+              "id": "m4",
+              "name": "hourly_rate",
+              "type": "string",
+              "value": "={{ $json.hourly_rate || 'No especificada' }}"
+            },
+            {
+              "id": "m5",
+              "name": "job_url",
+              "type": "string",
+              "value": "={{ $json.job_url }}"
+            },
+            {
+              "id": "m6",
+              "name": "summary_line",
+              "type": "string",
+              "value": "={{ (($json.client_need_summary || '').split('. ')[0] || '').trim() }}{{ ($json.client_need_summary || '').includes('.') ? '.' : '' }}"
+            },
+            {
+              "id": "m7",
+              "name": "sheet_url",
+              "type": "string",
+              "value": "https://docs.google.com/spreadsheets/d/1YA_kAmgL4CouvOLZhWFO4qM6Z96d0rB7vrZx21fYYOM/edit#gid=0"
+            },
+            {
+              "id": "m8",
+              "name": "status",
+              "type": "string",
+              "value": "={{ $json.status || 'OK' }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "0ff0aa45-ff21-4a94-8195-1fb774c2cee8",
+      "name": "Set - Clean Email Payload",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        320
+      ],
+      "notes": "PASO 8 - Limpieza de payload. Reduce la salida del worker a los campos minimos que necesita el correo. Descarta job_proposal_ai completo, screening_answers, job_description original, skills_profile y cualquier binario: eso ya vive en la hoja y en Slack."
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "sendTo": "mowglymx@gmail.com",
+        "subject": "={{ $json.status === 'ERROR' ? '[FALLO] ' : '[PROPUESTA] ' }}{{ $json.job_title }} ({{ $json.fit_score }})",
+        "message": "=<h2 style=\"margin:0 0 8px 0;font-family:Arial,sans-serif;\">{{ $json.job_title }}</h2>\n<p style=\"margin:0 0 16px 0;font-family:Arial,sans-serif;color:#555;\"><b>Fit:</b> {{ $json.fit_score }} &nbsp;&nbsp;|&nbsp;&nbsp; <b>Tarifa:</b> {{ $json.hourly_rate }}</p>\n<p style=\"font-family:Arial,sans-serif;\">{{ $json.summary_line }}</p>\n<p style=\"font-family:Arial,sans-serif;font-size:13px;color:#777;\">Job ID: {{ $json.job_id }}</p>\n<p style=\"font-family:Arial,sans-serif;\"><a href=\"{{ $json.job_url }}\">Ver la oferta en Upwork</a></p>\n<p style=\"font-family:Arial,sans-serif;\"><a href=\"{{ $json.sheet_url }}\">Leer la propuesta completa en la hoja</a></p>\n<hr style=\"border:none;border-top:1px solid #ddd;margin:20px 0;\">\n<p style=\"font-family:Arial,sans-serif;\"><b>Decide si vas a usar esta propuesta:</b></p>",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double",
+            "approveLabel": "Usar Propuesta",
+            "disapproveLabel": "No Usar Propuesta"
+          }
+        },
+        "options": {
+          "limitWaitTime": {
+            "values": {
+              "resumeAmount": 2,
+              "resumeUnit": "days"
+            }
+          },
+          "appendAttribution": false
+        }
+      },
+      "id": "e0d5de0c-58c6-4bc5-9553-0412b9fa937f",
+      "name": "Gmail - Aprobacion de Propuesta",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        592,
+        208
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000,
+      "alwaysOutputData": true,
+      "webhookId": "bd0c348f-9f2f-4e1d-8580-2a30218c4d0e",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "nfphH9W3oXJNlcJu",
+          "name": "Gmail account"
+        }
+      },
+      "onError": "continueRegularOutput",
+      "notes": "PASO 7 - Human in the loop. Operacion Create Draft exclusivamente. En todo el workflow no existe ningun nodo de envio de correo: la propuesta nunca sale sin que un humano abra el borrador y decida."
+    },
+    {
+      "parameters": {
+        "content": "## 12-b) Output: Gmail\nEnvía un email con **job_title**, el **fit_score** (mide qué tan acorde es el trabajo para mis skills), y **summary_line** que resume la respuesta para el trabajo. Y además adjunta link al Google Sheet para consultar la info completa.",
+        "height": 256,
+        "width": 336,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        336,
+        -32
+      ],
+      "id": "76d05694-e998-4697-bc4a-00fdb150ecff",
+      "name": "Sticky Note16"
+    },
+    {
+      "parameters": {
+        "content": "## 11) Sanitiza Campos\n\nToma el resultado de los sub-workflows o workers, **lo simplifica, lo sanitiza y luego lo envía** a Slack como respuesta al mensaje inicial. \n\nTambién envía un resumen por email para obtener una notificación.",
+        "height": 320,
+        "width": 272,
+        "color": "#D1DDFF"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        272,
+        448
+      ],
+      "id": "f7020f8a-201a-44d8-8486-319230e84c01",
+      "name": "Sticky Note17"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "1YA_kAmgL4CouvOLZhWFO4qM6Z96d0rB7vrZx21fYYOM",
+          "cachedResultName": "Jobs Log - Upwork",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1YA_kAmgL4CouvOLZhWFO4qM6Z96d0rB7vrZx21fYYOM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gid=0",
+          "cachedResultName": "Job Classification",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1YA_kAmgL4CouvOLZhWFO4qM6Z96d0rB7vrZx21fYYOM/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "job_id": "={{ $('Set - Clean Email Payload').item.json.job_id }}",
+            "usage_status": "={{ $json.data.approved ? 'Usar Propuesta' : 'No Usar Propuesta' }}"
+          },
+          "matchingColumns": [
+            "job_id"
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "f0e2998d-be7a-4093-a532-a5f170cb2072",
+      "name": "Registrar Decision",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        752,
+        208
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3xegCjL7n4CjzV4e",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueRegularOutput",
+      "notes": "Guarda en la hoja la decision humana tomada en el correo. usage_status queda en 'Usar Propuesta' o 'No Usar Propuesta'. Hace match por job_id contra la fila del job."
+    },
+    {
+      "parameters": {
+        "content": "## 13) Registrar Uso de Propuesta\n\nEl email contiene dos botones: Usar o No Usar Propuesta. Al hacer click en cualquiera, se registra si la Propuesta fue usada, o no.\n",
+        "height": 256,
+        "width": 288,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        704,
+        -32
+      ],
+      "id": "bc667f68-3653-4510-9e31-af5a473e0110",
+      "name": "Sticky Note18"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Route by Category": {
+      "main": [
+        [
+          {
+            "node": "Shopify Skill Worker",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Automation Skill Worker",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log Skipped",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Shopify Skill Worker": {
+      "main": [
+        [
+          {
+            "node": "Set - Clean Email Payload",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Post Proposal to Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Automation Skill Worker": {
+      "main": [
+        [
+          {
+            "node": "Set - Clean Email Payload",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Post Proposal to Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Job ID": {
+      "main": [
+        [
+          {
+            "node": "IF Current Job ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Job ID": {
+      "main": [
+        [
+          {
+            "node": "Search Job ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Current Job ID": {
+      "main": [
+        [
+          {
+            "node": "Update Job ID",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Register New Job ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Register New Job ID": {
+      "main": [
+        [
+          {
+            "node": "Register New Job ID1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Existent Job ID": {
+      "main": [
+        [
+          {
+            "node": "Route by Category",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Job Data - Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Generate Job ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "JSON Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Extract Job Data - Basic LLM Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Job Description": {
+      "main": [
+        [
+          {
+            "node": "Slack Filter Messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack Filter Messages": {
+      "main": [
+        [
+          {
+            "node": "Extract Job Data - Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Extract Job Data - Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "JSON Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Register New Job ID1": {
+      "main": [
+        [
+          {
+            "node": "Route by Category",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Job ID": {
+      "main": [
+        [
+          {
+            "node": "Existent Job ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set - Clean Email Payload": {
+      "main": [
+        [
+          {
+            "node": "Gmail - Aprobacion de Propuesta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail - Aprobacion de Propuesta": {
+      "main": [
+        [
+          {
+            "node": "Registrar Decision",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": true,
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "0deebc9e-5d74-4312-b824-1e946b3c9a3e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp",
+    "instanceId": "2c0d682ad244c2bafd3eaf127c3212a73cc3adfeb5c98fc1085806b6034d8863"
+  },
+  "nodeGroups": [],
+  "id": "QGkqG1DF74QPPCLR",
+  "tags": []
+}

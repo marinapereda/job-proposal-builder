@@ -1,0 +1,679 @@
+{
+  "name": "worker2_modulo4_marina_pereda",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=### Upwork job post ###\n\nTitle: {{ $json.job_title }}\nURL: {{ $json.job_url }}\nExperience level: {{ $json.experience_level }}\nContract type: {{ $json.type_of_contract }}\nHours per week: {{ $json.hours_per_week }}\nHourly rate: {{ $json.hourly_rate }}\nRate after Upwork commission: {{ $json.hourly_rate_after_commission }}\nEngagement: {{ $json.job_engagement }}\nMain skills required: {{ $json.main_skills }}\n\n--- DESCRIPTION ---\n{{ $json.job_description }}\n\n--- GOAL ---\n{{ $json.job_goal }}\n\n--- REQUIREMENTS (screening questions may be in here) ---\n{{ $json.job_requirements }}\n\n--- BONUS QUALIFICATIONS ---\n{{ $json.bonus_qualifications }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=ROLE:\nYou are the Upwork proposal writer for Marina Pereda, AI Automation builder, Shopify Expert Developer and CRO Strategist. You write in her exact voice.\n\nSCOPE:\nYou process only jobs already classified as AI Automation: n8n, Make, AI agents, chatbots, Claude or GPT integrations, Claude Skills, MCP, workflow automation. You invent nothing. You have two sources of truth and only two:\n1. MARINA'S SKILLS PROFILE, at the end of this message. Everything you claim about Marina must come from there.\n2. THE JOB POST, delivered in the user message with fields already extracted (job_title, job_description, hourly_rate, hours_per_week, job_requirements, bonus_qualifications, main_skills, experience_level, type_of_contract, job_engagement, job_goal).\n\nA human reviews every proposal before it is sent. When information is missing, mark it inline with [MARINA: ...] instead of guessing.\n\nGOAL:\nReturn structured output containing a finished, ready-to-send Upwork proposal in the field job_proposal_ai, plus the short analysis Marina needs to decide whether to send it.\n\n================================\nSTEP 0: READ THE SKILLS PROFILE FIRST\n================================\nBefore analyzing the job, read MARINA'S SKILLS PROFILE below and hold in mind:\n+ which of her listed automation skills and tools this job actually touches\n+ which Automation Project is closest to this job's actual mechanics: the trigger type, the AI step, the integration, the data source, the review gate. Match on how the system works, never on the client's industry.\n+ Mandalas Love is her strongest end-to-end technical proof: Slack trigger, multimodal agent reading an image, categorization, structured content generation, WordPress REST API integration, Draft state and human review. Lead with it when the job involves content generation, image or document processing, API integrations, or a full pipeline built from scratch.\n+ Dollar Shave Club is a widely recognized brand and her strongest client-facing automation proof: Shopify MCP querying the Admin GraphQL API, plus custom Claude Skills for data reporting, taxonomy error alerting and metafield cleanup. Lead with it when the job involves ecommerce data, MCP, Claude Skills, reporting, data quality or operations efficiency. Use it whenever the job asks for automation work done for a real client.\n+ Renue By Science shows AI inside a delivery workflow: Cursor with AI agents to write code faster, Claude to refine prompts, AI-generated imagery, alongside UX and CRO ownership and a 400% Black Friday result. Lead with it when the job involves AI-assisted development, prompt engineering or conversion work.\n+ The Shopify Portfolio section is engineering and ecommerce proof only. Use 2 to 4 stores maximum, and never as the main evidence on an automation job.\n+ whether anything the job asks for is NOT in her profile, especially Python, Zapier, Make, Airtable, LangChain outside n8n, fine-tuning or vector databases\n\n================================\nSTEP 1: ANALYZE THE JOB (internal thinking, not output)\n================================\n1. What does this company actually need? Not what the post says literally, the underlying process they want automated or the decision they want an AI to make.\n\n2. Decide internally which kind of post this is, because it sets the length and shape of the proposal. Do NOT return this as a field:\n   + SHORT_VAGUE: brief description, unclear scope\n   + SPECIFIC_TASKS: concrete automation or integration with defined deliverables\n   + LONG_TECHNICAL: detailed requirements, tech stack expectations, ongoing role\n   + OPERATIONS_ROLE: ongoing automation maintenance or operations support\n\n3. Sketch the build internally before writing: what triggers it, what the logic branches on, where the AI step sits, what structured output it produces, where it lands, and whether a human reviews it. You will compress this into one or two sentences in the hook.\n\n4. Fit signals that feed fit_score: whether hourly_rate is realistic for senior automation and integration work or clearly underpriced, hours_per_week against a part-time Central Time/EST schedule, timezone demands, and any tool the job requires that is not in her profile. Marina's own rate is not in the profile and you must never state a number for it.\n\n================================\nSTEP 2: WRITE THE PROPOSAL (this is job_proposal_ai)\n================================\nTwo parts separated by a line containing only: ---\n\nPART 1: THE HOOK (above the divider). The most important part. 100% specific to this job, written as if she read the post two minutes ago and already knows exactly what to build. 2 to 4 short paragraphs of 1 or 2 sentences. Pick the moves that fit:\n+ A direct claim of fit: \"I am the person you need.\" / \"I am a perfect fit for what you need!\"\n+ Immediate availability: \"And I can start today.\"\n+ The build sketch from Step 1, in one or two plain sentences: trigger, logic, AI step, output. This is the strongest move on automation jobs. Nothing proves competence faster than showing you already designed it.\n+ Proof she understood their specific problem, naming their tools back to them: n8n, Claude, OpenAI, webhooks, APIs, Slack, Google Sheets, WordPress, their CRM, their exact workflow.\n+ A concrete time estimate when scope is clear. Only when the automation is concrete enough to estimate honestly. Never estimate an open-ended agent system in hours.\n+ For vague posts, one smart clarifying question that shows expertise.\n\nPART 2: THE BIO (below the divider). Assemble ONLY from the skills profile. Light adaptation is fine, invention is not. Order:\n1. Intro line: \"I'm Marina, an AI Automation builder and expert Shopify Developer. I design and build AI agents and automations with n8n and Claude, connecting stores, data, email and AI models end to end.\"\n2. One expertise line tailored to this job.\n3. Flagship project paragraph. Pick the Automation Project closest to this job and describe how the system actually works, not just that it exists. Name the trigger, the AI step and the output.\n   MANDATORY: at least one Automation Project must appear in every proposal. Never write a proposal whose only evidence is Shopify stores.\n4. A second Automation Project when it adds a different angle, as a short paragraph or a \"+\" line. Two projects is the sweet spot on LONG_TECHNICAL posts.\n5. Engineering depth line, so she does not read as a no-code-only builder: real API work, GraphQL, REST, webhooks, and a full dev stack behind the automations.\n6. Ecommerce context line, only when the job touches an online store: 40+ custom Shopify stores since 2017 and deep familiarity with products, orders, customers, inventory, collections, metafields and taxonomy. This is her differentiator against generic automation freelancers.\n7. Shopify portfolio links, 2 to 4 maximum, only as engineering proof and only when relevant.\n8. Availability and close: \"I'm available to work Central Time/EST hours and happy to jump on a Zoom to walk through any of this work.\" or \"Let me know if you'd like to schedule a video meeting, or let's start right away!\"\n9. Sign-off: \"Thanks!\" or \"Best regards,\" then \"Marina\" on its own line.\n\nLENGTH, by the kind of post you identified in Step 1:\n+ SPECIFIC_TASKS: 120 to 220 words, hook does the selling, one project, short bio\n+ SHORT_VAGUE: 150 to 250 words, include one clarifying question\n+ LONG_TECHNICAL: 250 to 400 words, two projects, mirror 2 or 3 of their most important requirements, do not respond to every bullet\n+ OPERATIONS_ROLE: 200 to 300 words, lead with the Dollar Shave Club operations work\n\n================================\nSTEP 3: SCREENING QUESTIONS (CONDITIONAL, most posts have none)\n================================\nFirst decide whether this post actually contains screening questions. Only these two things count:\n+ An explicit block such as \"You will be asked to answer the following questions when submitting a proposal:\" followed by a list of questions.\n+ An explicit instruction to include specific items when applying, such as \"To apply, please include your resume, portfolio and hourly rate\". Each requested item becomes one question.\n\nIf neither is present, return screening_answers as an empty array and skip the rest of this step. That is the normal case and it is not a failure. Most Upwork posts have no screening questions.\n\nNEVER invent questions. Never turn a general job requirement into a question. Never add standard questions the client did not ask (availability, rate, experience, portfolio) just to fill the array. If you are unsure whether something is a question, leave it out and cover it inside the proposal body instead.\n\nWhen the post DOES have them, answer each one in Marina's style: short, direct, confident. One word is valid (\"Yes.\" / \"Absolutely.\"). Expand only when a detail adds credibility, 1 to 3 sentences max. For availability: available now, Central Time/EST overlap; if specific weekly hours are demanded, answer with a range consistent with hours_per_week.\n\nFor automation portfolio questions, use the Automation Projects. If the question specifically asks for automation work delivered to clients, use Dollar Shave Club and Renue By Science, not Mandalas Love.\n\nTwo questions you must never answer with a number of your own:\n+ Hourly rate or budget expectations. Her rate is set in the Upwork rate field, not in this profile. Answer with [MARINA: confirm your rate for this job].\n+ Rate-your-proficiency questions (1 to 5, or beginner to expert). The profile has no self-ratings. Answer with [MARINA: rate this].\n\nFor any tool in the Not Claimed list, never claim experience. Connect honestly to an adjacent listed skill, or insert [MARINA: confirm experience with X]. Once a real question is extracted, never leave it unanswered.\n\n================================\nVOICE RULES (CRITICAL)\n================================\nMarina writes like a busy expert typing fast, not marketing copy. English is not her first language and her writing has a natural, direct rhythm. Preserve it.\n\nDO: short sentences; paragraphs of 1 to 2 sentences; start sentences with \"And\" when it flows; plain confident statements (\"I have a lot of experience, so there is no problem.\"); concrete specifics (tool names, trigger types, API names, hours); \"+\" as the bullet character for all lists; at most one \":)\" per proposal and only in casual closes.\n\nNEVER: em dashes or en dashes anywhere, and no hyphen used as a pause or separator (hyphens inside compound words are fine: no-code, mobile-first, e-commerce). No emojis. None of these words or phrases or anything in their family: \"I'd love to\", \"I would love the opportunity\", \"excited\", \"thrilled\", \"passionate\", \"delve\", \"seamless\", \"seamlessly\", \"elevate\", \"leverage\", \"robust\", \"streamline\", \"cutting-edge\", \"top-notch\", \"resonates\", \"aligns perfectly\", \"I understand you're looking for\", \"In today's competitive market\", \"Rest assured\", \"Look no further\", \"furthermore\", \"moreover\", or \"additionally\" as a sentence opener. No restating their job post back as filler. No flattery about their brand. No generic promises without a concrete fact behind them. No three perfectly parallel sentence structures in a row, vary rhythm like a human.\n\n================================\nTOOL USE (MANDATORY)\n================================\nBefore returning your final answer, call the 'Voice Compliance Checker' tool with the exact full text of your draft job_proposal_ai. If it returns FAIL, rewrite every flagged line and call the tool again with the corrected text. Only finalize once it returns PASS. Never skip this check.\n\n================================\nHARD RULE\n================================\nNever fabricate a URL, client, metric, tool experience or certification that is not in the skills profile below. Never state a number for Marina's hourly rate. Never name a client for Mandalas Love: describe the system, never a customer. Never invent an automation client, workflow name or result beyond the three Automation Projects listed. If the job requires experience not listed, either connect it honestly to something listed, or insert a [MARINA: confirm experience with X] placeholder directly in the text so she sees it when she reviews.\n\n================================\nOUTPUT CONTRACT (EXACT)\n================================\nReturn ONLY the structured output, with exactly these FOUR fields and these exact names:\n\n+ client_need_summary: 2 or 3 sentences on what they actually need and what would win this job\n+ fit_score: one of STRONG, GOOD, WEAK\n+ job_proposal_ai: the COMPLETE proposal from Step 2, hook and bio, with real line breaks. This is the field Marina copies into Upwork. Never leave it empty and never summarize it.\n+ screening_answers: array of objects with keys question and answer. Return an empty array when the post has no screening questions. An empty array is the expected result for most posts, not an error.\n\nDo NOT return job_type, fit_notes, review_flags, cover_letter, or any other field. Four fields, nothing else. Do not wrap the output in markdown or code fences.\n\n================================\nMARINA'S SKILLS PROFILE\n================================\n{{ $json.skills_profile }}",
+          "maxIterations": 8
+        }
+      },
+      "id": "8dd45fcf-41e7-4b60-aa0c-52844f7e14ae",
+      "name": "AI Automation Proposal Writer",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        96,
+        -48
+      ],
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 2000,
+      "onError": "continueErrorOutput",
+      "notes": "Writes proposals for n8n, AI agents, Claude and automation jobs. Shares the model, parser and Slack output with the Shopify writer."
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "1YA_kAmgL4CouvOLZhWFO4qM6Z96d0rB7vrZx21fYYOM",
+          "cachedResultName": "Jobs Log - Upwork",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1YA_kAmgL4CouvOLZhWFO4qM6Z96d0rB7vrZx21fYYOM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gid=0",
+          "cachedResultName": "Job Classification",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1YA_kAmgL4CouvOLZhWFO4qM6Z96d0rB7vrZx21fYYOM/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "job_id": "={{ $('Executed by Another Workflow').item.json.job_id }}",
+            "job_proposal_ai": "={{ $json.output.job_proposal_ai }}"
+          },
+          "matchingColumns": [
+            "job_id"
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "999345b1-72a9-405f-afa1-2559221434b9",
+      "name": "Log Automation Proposal",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        736,
+        -48
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3xegCjL7n4CjzV4e",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueRegularOutput",
+      "notes": "Observability: logs every AI automation proposal to the 'Log Automation Proposal' tab in Jobs Log - Upwork."
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"client_need_summary\": {\n      \"type\": \"string\",\n      \"description\": \"2 or 3 sentences: what the client actually needs automated and what would win this job\"\n    },\n    \"fit_score\": {\n      \"type\": \"string\",\n      \"description\": \"How well this job fits Marina\",\n      \"enum\": [\"STRONG\", \"GOOD\", \"WEAK\"]\n    },\n    \"job_proposal_ai\": {\n      \"type\": \"string\",\n      \"description\": \"The complete ready-to-send Upwork proposal: hook, then a line containing only ---, then the bio. Real line breaks.\"\n    },\n    \"screening_answers\": {\n      \"type\": \"array\",\n      \"description\": \"One entry per screening question found in the post. Empty array if none.\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"question\": { \"type\": \"string\" },\n          \"answer\": { \"type\": \"string\" }\n        },\n        \"required\": [\"question\", \"answer\"]\n      }\n    }\n  },\n  \"required\": [\"client_need_summary\", \"fit_score\", \"job_proposal_ai\", \"screening_answers\"]\n}",
+        "autoFix": true
+      },
+      "id": "9b1871d3-246b-4b4b-b178-c8e3bd23a25b",
+      "name": "Automation Proposal Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        160,
+        416
+      ]
+    },
+    {
+      "parameters": {
+        "description": "Checks a block of text for banned AI-sounding phrases and em or en dashes before it is used as a final Upwork proposal. Call it with the full job_proposal_ai text. Returns PASS, or a list of violations to fix before finalizing.",
+        "jsCode": "const bannedPhrases = [\"i'd love to\",\"i would love the opportunity\",\"excited\",\"thrilled\",\"passionate\",\"delve\",\"seamless\",\"seamlessly\",\"elevate\",\"leverage\",\"robust\",\"streamline\",\"cutting-edge\",\"top-notch\",\"resonates\",\"aligns perfectly\",\"i understand you're looking for\",\"in today's competitive market\",\"rest assured\",\"look no further\",\"furthermore\",\"moreover\"];\nconst text = (typeof query === 'string') ? query : String(query || '');\nconst lower = text.toLowerCase();\nconst violations = [];\nif (/[—–]/.test(text)) {\n  violations.push('Contains an em dash or en dash character.');\n}\nfor (const phrase of bannedPhrases) {\n  if (lower.includes(phrase)) {\n    violations.push('Contains banned phrase: \"' + phrase + '\"');\n  }\n}\nif (violations.length === 0) {\n  return 'PASS: no banned phrases or dashes found.';\n}\nreturn 'FAIL:\\n' + violations.join('\\n');"
+      },
+      "id": "60be4a89-7060-4c50-a4bc-83e6536b6072",
+      "name": "Voice Compliance Checker",
+      "type": "@n8n/n8n-nodes-langchain.toolCode",
+      "typeVersion": 1.3,
+      "position": [
+        192,
+        176
+      ],
+      "notes": "Satisfies the ai_tool requirement: agent must call this before finalizing to check for em dashes and banned AI phrases."
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "o0",
+              "name": "status",
+              "type": "string",
+              "value": "OK"
+            },
+            {
+              "id": "o1",
+              "name": "job_id",
+              "type": "string",
+              "value": "={{ $('Executed by Another Workflow').item.json.job_id }}"
+            },
+            {
+              "id": "o2",
+              "name": "job_url",
+              "type": "string",
+              "value": "={{ $('Executed by Another Workflow').item.json.job_url }}"
+            },
+            {
+              "id": "o3",
+              "name": "job_title",
+              "type": "string",
+              "value": "={{ $('Executed by Another Workflow').item.json.job_title }}"
+            },
+            {
+              "id": "o4",
+              "name": "hourly_rate",
+              "type": "string",
+              "value": "={{ $('Executed by Another Workflow').item.json.hourly_rate }}"
+            },
+            {
+              "id": "o6",
+              "name": "fit_score",
+              "type": "string",
+              "value": "={{ $('AI Automation Proposal Writer').item.json.output.fit_score }}"
+            },
+            {
+              "id": "o8",
+              "name": "client_need_summary",
+              "type": "string",
+              "value": "={{ $('AI Automation Proposal Writer').item.json.output.client_need_summary }}"
+            },
+            {
+              "id": "o9",
+              "name": "job_proposal_ai",
+              "type": "string",
+              "value": "={{ $('AI Automation Proposal Writer').item.json.output.job_proposal_ai }}"
+            },
+            {
+              "id": "o10",
+              "name": "screening_answers",
+              "type": "array",
+              "value": "={{ $('AI Automation Proposal Writer').item.json.output.screening_answers }}"
+            },
+            {
+              "id": "o11",
+              "name": "error_message",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "o12",
+              "name": "error_node",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "o13",
+              "name": "execution_id",
+              "type": "string",
+              "value": "={{ $execution.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "17f059ad-6573-40ff-b10d-3ca52540c229",
+      "name": "Proposal Output",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        992,
+        -48
+      ],
+      "notes": "Contrato de salida hacia el Manager. Identico a worker1: mismos 12 campos, status=OK."
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e0",
+              "name": "status",
+              "type": "string",
+              "value": "ERROR"
+            },
+            {
+              "id": "e1",
+              "name": "job_id",
+              "type": "string",
+              "value": "={{ $('Executed by Another Workflow').item.json.job_id }}"
+            },
+            {
+              "id": "e2",
+              "name": "job_url",
+              "type": "string",
+              "value": "={{ $('Executed by Another Workflow').item.json.job_url }}"
+            },
+            {
+              "id": "e3",
+              "name": "job_title",
+              "type": "string",
+              "value": "={{ $('Executed by Another Workflow').item.json.job_title }}"
+            },
+            {
+              "id": "e4",
+              "name": "hourly_rate",
+              "type": "string",
+              "value": "={{ $('Executed by Another Workflow').item.json.hourly_rate }}"
+            },
+            {
+              "id": "e5",
+              "name": "fit_score",
+              "type": "string",
+              "value": "UNKNOWN"
+            },
+            {
+              "id": "e6",
+              "name": "client_need_summary",
+              "type": "string",
+              "value": "=El worker de AI Automation no pudo generar la propuesta. Revisar la ejecucion {{ $execution.id }}."
+            },
+            {
+              "id": "e7",
+              "name": "job_proposal_ai",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "e8",
+              "name": "screening_answers",
+              "type": "array",
+              "value": "={{ [] }}"
+            },
+            {
+              "id": "e9",
+              "name": "error_message",
+              "type": "string",
+              "value": "={{ $json.error?.message || $json.error || 'Worker fallo sin mensaje de error' }}"
+            },
+            {
+              "id": "e10",
+              "name": "error_node",
+              "type": "string",
+              "value": "AI Automation Proposal Writer"
+            },
+            {
+              "id": "e11",
+              "name": "execution_id",
+              "type": "string",
+              "value": "={{ $execution.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "24760eff-13f1-469e-96f6-59db4f08ba4b",
+      "name": "Fallback Output",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        736,
+        144
+      ],
+      "notes": "CONTINGENCIA: si el agente falla, devuelve el MISMO contrato de 12 campos con status=ERROR para que el Manager nunca se bloquee."
+    },
+    {
+      "parameters": {
+        "content": "## Ejecuta Workflow\nEste sub-workflow es ejecutado desde **manager_modulo2_marina_pereda.json**",
+        "height": 208,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -592,
+        112
+      ],
+      "id": "202007e7-b052-4731-be99-7f71de710a03",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "job_id"
+            },
+            {
+              "name": "job_url"
+            },
+            {
+              "name": "job_handle"
+            },
+            {
+              "name": "job_title"
+            },
+            {
+              "name": "job_description"
+            },
+            {
+              "name": "job_type"
+            },
+            {
+              "name": "experience_level"
+            },
+            {
+              "name": "type_of_contract"
+            },
+            {
+              "name": "hours_per_week"
+            },
+            {
+              "name": "hourly_rate"
+            },
+            {
+              "name": "hourly_rate_after_commission"
+            },
+            {
+              "name": "job_engagement"
+            },
+            {
+              "name": "main_skills"
+            },
+            {
+              "name": "job_goal"
+            },
+            {
+              "name": "job_requirements"
+            },
+            {
+              "name": "bonus_qualifications"
+            },
+            {
+              "name": "job_url_source"
+            }
+          ]
+        }
+      },
+      "id": "fa5fa422-e7a6-4a22-82de-127ee3dccff2",
+      "typeVersion": 1.1,
+      "name": "Executed by Another Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        -448,
+        -48
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "content": "## Declaración de Skills\nAquí se define un nuevo input **skills_profile** encargado de contener los Skills de AI Automations",
+        "height": 192,
+        "width": 304,
+        "color": "#D1DDFF"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -272,
+        -224
+      ],
+      "id": "c929f911-4f21-41d9-99e8-efa4ec5ad42f",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## Agente IA - Redactor de Propuestas\nEste agente consume los inputs del empleo, los compara con el **skills_profile**, y entonces crea una propuesta única.\n\nEn el Prompt (User Message) recibe los inputs, o datos del empleo publicado.\n\nEn el System Message se define el **ROL** del agente, el **ÁMBITO**, el **OBJETIVO** y los pasos que debe seguir para generar \"**La Propuesta Ganadora** para el empleo\".\n\nMax iterations: 2",
+        "height": 352,
+        "width": 464,
+        "color": "#D1D1D1"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        64,
+        -384
+      ],
+      "id": "ec92f178-2c70-4038-a81d-1cd1368dfda0",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "claude-opus-4-8",
+          "cachedResultName": "Claude Opus 4.8"
+        },
+        "options": {
+          "maxTokensToSample": 8192,
+          "temperature": 1
+        }
+      },
+      "id": "b45f5953-f060-442a-9280-299ece071d60",
+      "name": "Claude",
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.5,
+      "position": [
+        96,
+        128
+      ],
+      "credentials": {
+        "anthropicApi": {
+          "id": "jhWhqSyqb1WxMTpa",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Tool para Validar el lenguaje\nEsta herramienta prohibe el uso de signos, como el dash, y el uso de palabras visiblemente \"artificiales\". Es una especie de **modulador del lenguaje usado**.",
+        "height": 208,
+        "width": 336,
+        "color": "#EDEDED"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        304,
+        112
+      ],
+      "id": "341a37c0-a764-43cd-b4d9-e81daf09a0e0",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "## Parsea la respuesta\nEn lugar de generar un gran texto, la propuesta es generada en bloques de texto **client_need_summary**, **fit_score**, **job_proposal_ai** y **screening_answers**",
+        "height": 208,
+        "width": 336,
+        "color": "#EDEDED"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        384,
+        336
+      ],
+      "id": "99398471-69d1-4480-844b-bc1b6c855817",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a1",
+              "name": "skills_profile",
+              "value": "## MARINA SKILLS PROFILE: AI AUTOMATION (single source of truth: never claim anything not listed here)\n\n### Identity\n+ Marina Pereda, AI Automation builder, Shopify Expert Developer and CRO Strategist\n+ 40+ custom Shopify stores delivered, working with Shopify since 2017\n+ Portfolio: https://marinapereda.dev/about and https://marinapereda.dev/projects\n+ Working hours: Central Time / EST overlap\n+ Fluent English, native Spanish\n+ Rate: NOT listed here. It is set in the Upwork rate field. If a screening question asks for it, insert [MARINA: confirm your rate for this job].\n\n### AI and Automation\n+ AI Agents: designing and building agent workflows connecting business tools and AI models\n+ AI Automations with n8n: triggers, branching logic, AI steps, structured JSON outputs, human-in-the-loop review gates\n+ Multi-step agent logic: classification, routing, content generation, structured output, review gates, error handling and fallback paths\n+ Multimodal agents: image interpretation feeding categorization and content generation\n+ Claude Code and AI-assisted development workflows\n+ Building custom Claude Skills for repeatable business tasks: data reporting, error alerting, data quality checks and cleanup\n+ MCP (Model Context Protocol): using the Shopify MCP to query the Admin GraphQL API and build tooling on top of it\n+ Agentic Commerce: preparing ecommerce stores for AI-driven shopping and AI-assisted purchase flows\n+ AI-assisted image generation for ecommerce assets (Nano Banana)\n\n### Automation Projects\n+ Mandalas Love, https://mandalas.love. End-to-end content automation built with n8n, Claude, Slack, Google Sheets and the WordPress REST API. An artist uploads a new mandala illustration to a Slack channel and that triggers the workflow. An AI agent interprets the image, categorizes it, and generates the title, SEO data, description and the remaining post fields. The workflow then creates the post in WordPress through the REST API, leaves it in Draft, and posts back to Slack to say it is ready for review. Human-in-the-loop by design: nothing publishes without a person approving it. This one is Marina's own build, so never name a client for it. Describe the system, not a customer.\n+ Dollar Shave Club, us.dollarshaveclub.com. Merchandising strategy, taxonomy improvements, collections clean up and international store synchronization (UK, AU, CA). Made heavy use of the Shopify MCP to query the Admin GraphQL API, then built custom Claude Skills for data reporting, for alerting on taxonomy errors in Product Type and Product Category, and for checking and cleaning up product and collection metafields.\n+ Renue By Science, https://renuebyscience.com. Full redesign and development, with AI in the build process: Cursor with AI agents to write Shopify code faster, Claude to refine the prompts driving that work, and Nano Banana to generate some of the store imagery. Led the UX and CRO planning and defined the Klaviyo strategy for landing pages and email flows. Contributed to a 400% sales increase on Black Friday.\n\n### Engineering Depth (proof she is a real engineer, not a no-code-only builder)\n+ HTML, CSS, SASS, JavaScript, jQuery, React.js, PHP, MySQL\n+ API integrations: REST APIs, GraphQL, webhooks, third-party app connectors\n+ Shopify Admin API, Storefront API and Checkout Extensibility, for automations that touch ecommerce data\n+ WordPress REST API for programmatic content creation\n+ Git and GitHub based workflow\n\n### Data and Tools\n+ Google Sheets and Excel for data workflows and pipeline state\n+ GA4 for tracking and reporting integrations\n+ Klaviyo integration experience (email and automation adjacent)\n+ Slack as a trigger and as a human review surface\n\n### Ecommerce Context (differentiator for automation jobs tied to online stores)\n+ 40+ custom Shopify stores delivered since 2017\n+ Deep familiarity with ecommerce data: products, orders, customers, inventory, collections, metafields, taxonomy\n+ Can automate workflows that touch a live store, not just generic SaaS tools\n\n### Not Claimed / Flag Instead of Guessing\nNever claim these; connect honestly to an adjacent listed skill or insert a [MARINA: ...] placeholder: Python scripting, Zapier, Make (Integromat), Airtable, LangChain/LangGraph outside of n8n, fine-tuning models, vector databases.\n\n### Shopify Portfolio (use only as engineering and ecommerce proof, 2 to 4 max per proposal)\n+ https://dingo1969.com (custom theme built from scratch)\n+ https://sarasells.com (complex Metaobjects and Theme Settings logic, structured-logic thinking close to automation work)\n+ https://ultracur-wholesale.myshopify.com (B2B and wholesale)\n+ https://nuuvohaircare.com (Shopify 2.0 theme conversion)",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "24d4613f-01bd-432f-bb9c-84322a90c054",
+      "name": "AI Automation Skills Profile",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -160,
+        -48
+      ],
+      "notes": "Marina's AI Automation skills memory. Edit ONLY this node to update automation skills and proof points."
+    },
+    {
+      "parameters": {
+        "content": "## Error de Salida\nSi por alguna razón el proceso falló, envía un mensaje: \"El worker de Shopify no pudo generar la propuesta. Revisar la ejecucion {{ $execution.id }}.\"",
+        "height": 192,
+        "width": 336,
+        "color": "#D1DDFF"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        816,
+        160
+      ],
+      "id": "8f772477-08dd-4a86-b3a8-82b444a566ab",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "## Guarda la Propuesta en Memoria\nRetoma el Google Sheet usado en el workflow principal, y guarda la respuesta, en cada columna, para: **client_need_summary**, **fit_score**, **job_proposal_ai** y **screening_answers**",
+        "height": 240,
+        "width": 336,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        576,
+        -272
+      ],
+      "id": "acfa3cea-8ab3-49c1-be1a-fbbb9ffe4a1a",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "## Salida de la Propuesta \nEnvía los outputs **client_need_summary**, **fit_score**, **job_proposal_ai** y **screening_answers** al Workflow principal",
+        "height": 208,
+        "width": 336,
+        "color": "#D1DDFF"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        944,
+        -240
+      ],
+      "id": "71d6eac9-2a08-4562-b5f6-4aecf5646050",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "claude-sonnet-4-6",
+          "cachedResultName": "Claude Sonnet 4.6"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.5,
+      "position": [
+        160,
+        544
+      ],
+      "id": "ee28313e-e4c3-4942-9f35-090951c207fb",
+      "name": "Claude1",
+      "credentials": {
+        "anthropicApi": {
+          "id": "jhWhqSyqb1WxMTpa",
+          "name": "Anthropic account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "AI Automation Proposal Writer": {
+      "main": [
+        [
+          {
+            "node": "Log Automation Proposal",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Fallback Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Automation Proposal Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Automation Proposal Writer",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Voice Compliance Checker": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Automation Proposal Writer",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Automation Proposal": {
+      "main": [
+        [
+          {
+            "node": "Proposal Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "AI Automation Skills Profile",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Automation Proposal Writer",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Automation Skills Profile": {
+      "main": [
+        [
+          {
+            "node": "AI Automation Proposal Writer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Automation Proposal Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": true,
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "df6a1675-167b-4b11-b896-0e1961338fa0",
+  "meta": {
+    "aiBuilderAssisted": true,
+    "builderVariant": "mcp",
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2c0d682ad244c2bafd3eaf127c3212a73cc3adfeb5c98fc1085806b6034d8863"
+  },
+  "nodeGroups": [],
+  "id": "JxVykFApDyiqmUMu",
+  "tags": []
+}
